@@ -1,6 +1,9 @@
 # This script checks multiple YouTube video IDs for HDR processing status every 30 minutes.
 # 
-# 1. Install dependencies: python3 -m pip install yt-dlp --break-system-packages
+# 1. Install dependencies:
+#   python3 -m pip install yt-dlp --break-system-packages
+#   python3 -m pip install yt-dlp-ejs --break-system-packages
+#   brew install deno
 # 2. Add your IDs: Paste the Video IDs into the VIDEO_IDS list.
 # 3. Run it in the background: python3 check_hdr.py &
 # 
@@ -18,7 +21,13 @@ def notify_mac(title, text):
 
 def is_hdr_processed(video_id):
     url = f"https://www.youtube.com/watch?v={video_id}"
-    ydl_opts = {'quiet': True, 'noplaylist': True}
+    ydl_opts = {
+        'quiet': True,
+        'noplaylist': True,
+        'remote_components': ['ejs:github'],
+        'js_runtimes': {'deno': {}},
+    }
+
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
