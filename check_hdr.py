@@ -1,13 +1,15 @@
-# This script checks multiple YouTube video IDs for HDR processing status every 30 minutes.
+# This script checks multiple YouTube video IDs for HDR processing status.
 # 
 # 1. Install dependencies:
 #   python3 -m pip install yt-dlp --break-system-packages
 #   python3 -m pip install yt-dlp-ejs --break-system-packages
 #   brew install deno
 # 2. Add your IDs: Paste the Video IDs into the VIDEO_IDS list.
-# 3. Run it in the background: python3 check_hdr.py &
+# 3. Run one check: python3 check_hdr.py
+# 4. Keep checking every 30 minutes: python3 check_hdr.py --loop
 # 
 
+import argparse
 import yt_dlp
 import time
 import os
@@ -48,10 +50,7 @@ def is_hdr_processed(video_id):
             print(f"Error checking {video_id}: {e}")
             return False
 
-print("Starting HDR Monitoring Service...")
-active_checks = list(VIDEO_IDS)
-
-while active_checks:
+def check_videos(active_checks):
     for vid in list(active_checks):
         print(f"[{time.strftime('%H:%M:%S')}] Checking {vid}...")
         if is_hdr_processed(vid):
@@ -61,8 +60,34 @@ while active_checks:
             active_checks.remove(vid)
         else:
             print(f"Status: Still SDR.")
-            
-    if active_checks:
-        time.sleep(CHECK_INTERVAL)
 
-print("All videos processed. Service stopping.")
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Check YouTube videos for HDR processing status."
+    )
+    parser.add_argument(
+        "--loop",
+        action="store_true",
+        help="Keep checking every 30 minutes until all videos are processed.",
+    )
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+    active_checks = list(VIDEO_IDS)
+
+    if args.loop:
+        print("Starting HDR Monitoring Service...")
+        while active_checks:
+            check_videos(active_checks)
+
+            if active_checks:
+                time.sleep(CHECK_INTERVAL)
+
+        print("All videos processed. Service stopping.")
+    else:
+        print("Running one HDR check...")
+        check_videos(active_checks)
+
+if __name__ == "__main__":
+    main()
