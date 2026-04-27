@@ -15,7 +15,7 @@ import time
 import os
 
 # Configuration
-VIDEO_IDS = ["eSsmKQaOiBA", "b_FudzkB-qs", "R60bdY3gy2s", "5-7-pgHwx8I", "5pxCl9kFS2c", "O4El_cwuZeo", "XESuvDl5EXQ"]  # Put your multiple version IDs here
+VIDEO_IDS = ["eSsmKQaOiBA", "b_FudzkB-qs", "R60bdY3gy2s", "5-7-pgHwx8I", "5pxCl9kFS2c", "O4El_cwuZeo", "XESuvDl5EXQ", "vHx2h2BX9Mo"]  # Put your multiple version IDs here
 CHECK_INTERVAL = 1800  # Check every 30 minutes (1800 seconds)
 
 def notify_mac(title, text):
